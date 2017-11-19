@@ -1,0 +1,2 @@
+Mainfest-Version: 1.0-SNAPSHOT
+Main-Class: com.pillphil.CurrencyConverter.Main
