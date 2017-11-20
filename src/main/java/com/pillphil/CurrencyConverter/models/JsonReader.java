@@ -10,25 +10,27 @@ import org.apache.http.util.EntityUtils;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.jsoup.helper.Validate;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.HashMap;
 
 public class JsonReader {
-    static private CloseableHttpClient httpClient = HttpClients.createDefault();
-    static private HttpGet httpGet;
 
     public static JSONObject getJson(String url) throws IOException {
-        httpGet = new HttpGet(url);
+        Validate.notNull(url, "URL can't be null");
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(url);
+
         CloseableHttpResponse response = httpClient.execute(httpGet);
-        JSONObject json = new JSONObject();
+        String responseString = "";
 
         try {
             HttpEntity entity = response.getEntity();
-            String responseString = EntityUtils.toString(entity, "UTF-8");
-            JSONParser parser;
-            parser = new JSONParser();
-
-            json = (JSONObject) parser.parse(responseString);
+            responseString = EntityUtils.toString(entity, "UTF-8");
             EntityUtils.consume(entity);
         }
         catch (Exception e) {
@@ -38,7 +40,35 @@ public class JsonReader {
             response.close();
         }
 
+        return stringToJson(responseString);
+    }
+
+    public static JSONObject stringToJson(String jsonString) {
+        Validate.notNull(jsonString, "JSON string can't be null");
+        JSONObject json = new JSONObject();
+        JSONParser parser = new JSONParser();
+
+        try {
+            json = (JSONObject) parser.parse(jsonString);
+        }
+        catch (ParseException e) {
+            // TODO handle Exception
+        }
+
         return json;
     }
 
+    public static HashMap<String, BigDecimal> jsonToHashMap(JSONObject json) {
+        Validate.notNull(json, "JSON Object can't be null");
+        Object[] keys = json.keySet().toArray();
+        HashMap<String, BigDecimal> map = new HashMap<>();
+
+        for (int i = 0; i < keys.length; i++) {
+            String key = keys[i].toString();
+            BigDecimal value = BigDecimal.valueOf((double)json.get(key));
+            map.put(key, value);
+        }
+
+        return map;
+    }
 }
