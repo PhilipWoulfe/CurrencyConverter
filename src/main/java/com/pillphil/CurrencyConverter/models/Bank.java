@@ -2,15 +2,17 @@ package com.pillphil.CurrencyConverter.models;
 
 import org.jsoup.helper.Validate;
 
-public class Bank {
-    private String  bankName;
-    private double  commission;
+import java.math.BigDecimal;
 
-    public Bank (String bankName, Double commission) {
+public class Bank implements Comparable {
+    private String bankName;
+    private BigDecimal commission;
+
+    public Bank(String bankName, BigDecimal commission) {
         Validate.notNull(bankName, "Bank Name can't be null");
         Validate.notNull(commission, "Commission can't be null");
 
-        this.bankName   = bankName;
+        this.bankName = bankName;
         this.commission = commission;
     }
 
@@ -18,12 +20,17 @@ public class Bank {
         return bankName;
     }
 
-    public double getCommission() {
+    public BigDecimal getCommission() {
         return commission;
     }
 
     @Override
     public String toString() {
         return bankName;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.toString().compareTo(o.toString());
     }
 }

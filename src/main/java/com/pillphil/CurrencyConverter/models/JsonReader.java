@@ -32,11 +32,9 @@ public class JsonReader {
             HttpEntity entity = response.getEntity();
             responseString = EntityUtils.toString(entity, "UTF-8");
             EntityUtils.consume(entity);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO implement catch
-        }
-        finally {
+        } finally {
             response.close();
         }
 
@@ -50,8 +48,7 @@ public class JsonReader {
 
         try {
             json = (JSONObject) parser.parse(jsonString);
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             // TODO handle Exception
         }
 
@@ -66,7 +63,7 @@ public class JsonReader {
 
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i].toString();
-            BigDecimal value = BigDecimal.valueOf((double)json.get(key));
+            BigDecimal value = BigDecimal.valueOf((double) json.get(key));
             map.put(key, value);
         }
 

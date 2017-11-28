@@ -24,7 +24,7 @@ public class ExchangeRates {
 //
 //    }
 
-    public ExchangeRates (JSONObject json) {
+    public ExchangeRates(JSONObject json) {
         Validate.notNull(json, "Json can't be null");
         Validate.notNull(json.get("base"), "Json must contain base key");
         Validate.notNull(json.get("date"), "Json must contain date key");

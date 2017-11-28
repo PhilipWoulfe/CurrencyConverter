@@ -1,5 +1,6 @@
 package com.pillphil.CurrencyConverter;
 
+import com.pillphil.CurrencyConverter.controllers.CurrencyController;
 import com.pillphil.CurrencyConverter.models.*;
 
 import com.pillphil.CurrencyConverter.views.CurrencyGui;
@@ -12,25 +13,46 @@ import javax.swing.*;
 import java.io.*;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
-
         Currency[] currencies = readCurrenciesFromFile();
 
-        ExchangeRates rates = readExchangeRatesFromJson();
+        ExchangeRates[] rates = readExchangeRates(currencies);
 
         Bank[] banks = readBanksFromFile();
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        CurrencyGui gui = new CurrencyGui(currencies, banks, rates, getDefaultCurrency(currencies, "EUR"));
+
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new CurrencyGui(currencies, banks, "EUR");
+                // new CurrencyController(currencies, rates, banks, gui).gui.setRate(rates[0].getRate("EUR"));
+                new CurrencyController(currencies, rates, banks, gui);
             }
         });
+    }
+
+    private static Currency getDefaultCurrency(Currency[] currencies, String currency) {
+        Currency c = null;
+
+        for (int i = 0; i < currencies.length; i++) {
+
+            try {
+                if (currencies[i].getCurrencyCode().equals(currency)) {
+                    c = currencies[i];
+                    break;
+                } else
+                    throw new Exception("Currency not found!");
+            } catch (Exception e) {
+                // do something
+            }
+        }
+
+        return c;
     }
 
     public static Currency[] readCurrenciesFromFile() {
@@ -40,9 +62,9 @@ public class Main {
         Iterable<CSVRecord> records = readFromCsv("Currency_CodeToName.csv");
 
         for (CSVRecord record : records) {
-            String  code        = record.get(0).trim();
-            String  name        = record.get(1).trim();
-            String  symbol      = record.get(2).trim();
+            String code = record.get(0).trim();
+            String name = record.get(1).trim();
+            String symbol = record.get(2).trim();
             boolean isPrepended = Boolean.parseBoolean(record.get(3).trim());
 
             Currency c = new Currency(code, name, symbol, isPrepended);
@@ -62,8 +84,8 @@ public class Main {
         Iterable<CSVRecord> records = readFromCsv("banks.csv");
 
         for (CSVRecord record : records) {
-            String  bankName    = record.get(0).trim();
-            Double  commission  = Double.parseDouble(record.get(1).trim());
+            String bankName = record.get(0).trim();
+            BigDecimal commission = BigDecimal.valueOf(Double.parseDouble(record.get(1).trim()));
 
             Bank b = new Bank(bankName, commission);
             bankList.add(b);
@@ -102,19 +124,33 @@ public class Main {
         return records;
     }
 
-    public static ExchangeRates readExchangeRatesFromJson() {
+    public static ExchangeRates readExchangeRatesFromJson(String str) {
 
         JSONObject json = new JSONObject();
 
         try {
-            json = JsonReader.getJson("http://api.fixer.io/latest?base=USD");
-        }
-        catch (Exception e) {
+            json = JsonReader.getJson("http://api.fixer.io/latest?base=" + str);
+        } catch (Exception e) {
             // ?
         }
 
         ExchangeRates e = new ExchangeRates(json);
 
         return e;
-     }
+    }
+
+
+    public static ExchangeRates[] readExchangeRates(Currency[] currencies) {
+        ExchangeRates[] ratesArr;
+
+        List<ExchangeRates> ratesList = new ArrayList<>();
+
+        for (Currency c : currencies) {
+            ratesList.add(readExchangeRatesFromJson(c.getCurrencyCode()));
+        }
+
+        ratesArr = ratesList.toArray(new ExchangeRates[ratesList.size()]);
+
+        return ratesArr;
+    }
 }
