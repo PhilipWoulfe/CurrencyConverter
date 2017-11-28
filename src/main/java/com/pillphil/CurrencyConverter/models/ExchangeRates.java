@@ -30,7 +30,6 @@ public class ExchangeRates {
         Validate.notNull(json.get("date"), "Json must contain date key");
         Validate.notNull(json.get("rates"), "Json must contain rates key");
 
-        // TODO move JSON to HashMap there
         String dateString = json.get("date").toString();
         String ratesString = json.get("rates").toString();
         JSONObject ratesJsonObject = JsonReader.stringToJson(ratesString);
@@ -58,5 +57,10 @@ public class ExchangeRates {
 
     public BigDecimal getRate(String targetCurrency) {
         return rates.get(targetCurrency);
+    }
+
+    @Override
+    public String toString() {
+        return baseCurrency + " " + date + " " + rates.get("EUR");
     }
 }

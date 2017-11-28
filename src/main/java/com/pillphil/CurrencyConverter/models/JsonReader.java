@@ -58,6 +58,7 @@ public class JsonReader {
         return json;
     }
 
+    // TODO try and make this more generic
     public static HashMap<String, BigDecimal> jsonToHashMap(JSONObject json) {
         Validate.notNull(json, "JSON Object can't be null");
         Object[] keys = json.keySet().toArray();

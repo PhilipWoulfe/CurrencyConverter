@@ -22,6 +22,6 @@ public class ExchangeRate {
     }
 
     public BigDecimal getExchangeRate() {
-        return exchangeRate;
+        return this.exchangeRate;
     }
 }
