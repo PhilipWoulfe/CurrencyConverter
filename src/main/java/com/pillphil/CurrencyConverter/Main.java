@@ -1,5 +1,15 @@
 package com.pillphil.CurrencyConverter;
 
+/**
+ * <h1>Main</h1>
+ * <p>Main class - this is where everything runs from/p>
+ *
+ * @author Philip Woulfe
+ * @version 1.0
+ * @since 2017-11-27
+ */
+
+
 import com.pillphil.CurrencyConverter.controllers.CurrencyController;
 import com.pillphil.CurrencyConverter.models.*;
 
@@ -12,7 +22,6 @@ import org.json.simple.JSONObject;
 import javax.swing.*;
 import java.io.*;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
@@ -27,35 +36,42 @@ public class Main {
 
         CurrencyGui gui = new CurrencyGui(currencies, banks, rates, getDefaultCurrency(currencies, "EUR"));
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                // new CurrencyController(currencies, rates, banks, gui).gui.setRate(rates[0].getRate("EUR"));
-                new CurrencyController(currencies, rates, banks, gui);
-            }
-        });
+        // I don't think this is doing anything...
+        SwingUtilities.invokeLater(() -> new CurrencyController(currencies, rates, banks, gui));
     }
 
+    /**
+     * Get default currency object based in input string
+     * @param currencies - Currency array
+     * @param currency - String code of desired currency object
+     *
+     * @return returns currency object with code of input string
+     */
     private static Currency getDefaultCurrency(Currency[] currencies, String currency) {
         Currency c = null;
 
-        for (int i = 0; i < currencies.length; i++) {
+        for (Currency currency1 : currencies) {
 
             try {
-                if (currencies[i].getCurrencyCode().equals(currency)) {
-                    c = currencies[i];
+                if (currency1.getCurrencyCode().equals(currency)) {
+                    c = currency1;
                     break;
                 } else
                     throw new Exception("Currency not found!");
             } catch (Exception e) {
-                // do something
+                System.out.println( currency + " Currency Not Found - Check internet connection");
             }
         }
 
         return c;
     }
 
-    public static Currency[] readCurrenciesFromFile() {
+    /**
+     * read currencies from file and return currency array
+     *
+     * @return returns currency array populated from file
+     */
+    private static Currency[] readCurrenciesFromFile() {
         Currency[] currencyArr;
         List<Currency> currencyList = new ArrayList<>();
 
@@ -77,7 +93,12 @@ public class Main {
         return currencyArr;
     }
 
-    public static Bank[] readBanksFromFile() {
+    /**
+     * read banks from file and return bank array
+     *
+     * @return returns bank array populated from file
+     */
+    private static Bank[] readBanksFromFile() {
         Bank[] bankArr;
         List<Bank> bankList = new ArrayList<>();
 
@@ -97,50 +118,50 @@ public class Main {
         return bankArr;
     }
 
-//    public static <T> T[] arrayListToTypeArray(ArrayList<T> arrayList) {
-//        arrayList.toArray(getArray(arrayList, arrayList.size())[arrayList.size()]);
-//    }
-//
-//    public <E> E[] getArray(Class<E> clazz, int size) {
-//        @SuppressWarnings("unchecked")
-//        E[] arr = (E[]) Array.newInstance(clazz, size);
-//
-//        return arr;
-//    }
-
-    public static Iterable<CSVRecord> readFromCsv(String filePath) {
+    /**
+     * read from file and return CSVRecord object
+     * @param filePath String of file location
+     *
+     * @return CSVRecord -  returns csv file and return
+     */
+    private static Iterable<CSVRecord> readFromCsv(String filePath) {
         Reader in;
         Iterable<CSVRecord> records = null;
 
         try {
             in = new FileReader(filePath);
             records = CSVFormat.EXCEL.parse(in);
-        } catch (FileNotFoundException e) {
-            // File not found
         } catch (IOException e) {
-            // File not found
+            JOptionPane.showMessageDialog(null, "File not found!");
         }
 
         return records;
     }
 
-    public static ExchangeRates readExchangeRatesFromJson(String str) {
+    /**
+     * read currencies from file and return currency array
+     * @param str currency code for desired currency
+     * @return returns ExchangeRates Object populated from fixer.io api
+     */
+    private static ExchangeRates readExchangeRatesFromJson(String str) {
 
         JSONObject json = new JSONObject();
 
         try {
             json = JsonReader.getJson("http://api.fixer.io/latest?base=" + str);
         } catch (Exception e) {
-            // ?
+            JOptionPane.showMessageDialog(null, "Cannot connect to API - Check internet connection");
         }
 
-        ExchangeRates e = new ExchangeRates(json);
-
-        return e;
+        return new ExchangeRates(json);
     }
 
-
-    public static ExchangeRates[] readExchangeRates(Currency[] currencies) {
+    /**
+     * Create Exchange Rates array populated with exchange rates from input
+     * @param currencies Currency array
+     * @return returns exchange rate array populated from currency
+     */
+    private static ExchangeRates[] readExchangeRates(Currency[] currencies) {
         ExchangeRates[] ratesArr;
 
         List<ExchangeRates> ratesList = new ArrayList<>();

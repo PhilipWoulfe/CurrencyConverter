@@ -1,10 +1,17 @@
 package com.pillphil.CurrencyConverter.views;
 
+/**
+ * <h1>ICurrency</h1>
+ * <p>Interface for Currency GUIs</p>
+ *
+ * @author Philip Woulfe
+ * @version 1.0
+ * @since 2017-11-27
+ */
+
 import com.pillphil.CurrencyConverter.models.Bank;
 import com.pillphil.CurrencyConverter.models.Currency;
 
-import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 
 public interface ICurrency {
@@ -27,11 +34,5 @@ public interface ICurrency {
 
     void setTargetAmount(BigDecimal targetAmount);
 
-    //    ActionListener stateChanged();
-//
-//    ActionListener getConvertAction();
     void reset();
-//    ActionListener getPrintAction();
-//    ActionListener getExitAction();
-
 }

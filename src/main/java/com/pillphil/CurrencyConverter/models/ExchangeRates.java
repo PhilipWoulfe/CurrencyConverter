@@ -1,29 +1,34 @@
 package com.pillphil.CurrencyConverter.models;
 
-import javafx.util.converter.LocalDateStringConverter;
+/**
+ * <h1>ExchangeRates</h1>
+ * <p>/p>
+ *
+ * @author Philip Woulfe
+ * @version 1.0
+ * @since 2017-11-27
+ */
+
 import org.json.simple.JSONObject;
 import org.jsoup.helper.Validate;
 
 import java.math.BigDecimal;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
 import java.util.HashMap;
 
 public class ExchangeRates {
     private String baseCurrency;
     private LocalDate date;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private HashMap<String, BigDecimal> rates;
 
-//    public ExchangeRates(String baseCurrency, Date date, HashMap<String, BigDecimal> rates) {
-//        Validate.notNull(baseCurrency, "Base Currency can't be null");
-//        Validate.notNull(date, "Date can't be null");
-//        Validate.notNull(rates, "Rates can't be null");
-//
-//
-//    }
-
+    /**a
+     * Constructor for Exchange Rate
+     *
+     * @param json JSONObject JsonObject for xchange rate
+     */
     public ExchangeRates(JSONObject json) {
         Validate.notNull(json, "Json can't be null");
         Validate.notNull(json.get("base"), "Json must contain base key");

@@ -11,19 +11,13 @@ package com.pillphil.CurrencyConverter.views;
 
 import com.pillphil.CurrencyConverter.models.Currency;
 import com.pillphil.CurrencyConverter.models.Bank;
-import com.pillphil.CurrencyConverter.models.ExchangeRate;
 import com.pillphil.CurrencyConverter.models.ExchangeRates;
-import com.sun.javafx.binding.StringFormatter;
 
 import javax.swing.*;
 
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.text.MaskFormatter;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -39,22 +33,14 @@ public class CurrencyGui extends JFrame implements ICurrency {
 
     private JLabel lblBaseCurrency;
     private JLabel lblTargetCurrency;
-    private JLabel lblUseCustomRate;
-    private JLabel lblBaseAmount;
-    private JLabel lblTargetAmount;
-    private JLabel lblConversionRate;
-    private JLabel lblBank;
-    private JLabel lblCommissionRate;
 
     private JTextField txtBaseAmount;
     private JTextField txtTargetAmount;
     private JTextField txtConversionRate;
     private JTextField txtCommissionRate;
 
-    private JButton btnConvert;
     private JButton btnReset;
     private JButton btnClose;
-    private JButton btnPrint;
 
     private Currency defaultCurrency;
 
@@ -64,6 +50,10 @@ public class CurrencyGui extends JFrame implements ICurrency {
 
     /**
      * Constructor for Currency Screen
+     *
+     * @param currencies Currencies array for GUI
+     * @param rates Rates array for GUI
+     * @param banks Banks array for GUI
      */
     public CurrencyGui(Currency[] currencies, Bank[] banks, ExchangeRates[] rates, Currency defaultCurrency) {
 
@@ -80,6 +70,10 @@ public class CurrencyGui extends JFrame implements ICurrency {
         reset();
     }
 
+    /**
+     * Create and return the basic main panel
+     * @return return JPanel
+     */
     private JPanel getMainPanel() {
         JPanel pane = new JPanel();
         pane.add(getInputPanel(), BorderLayout.CENTER);
@@ -88,6 +82,10 @@ public class CurrencyGui extends JFrame implements ICurrency {
         return pane;
     }
 
+    /**
+     * Create and return the basic input panel
+     * @return JPanel
+     */
     private JPanel getInputPanel() {
         JPanel pane = new JPanel();
         pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
@@ -98,6 +96,10 @@ public class CurrencyGui extends JFrame implements ICurrency {
         return pane;
     }
 
+    /**
+     * Create and return the basic currency panel
+     * @return JPanel
+     */
     private JPanel getCurrencyPanel() {
         JPanel pane;
 
@@ -139,10 +141,14 @@ public class CurrencyGui extends JFrame implements ICurrency {
         return pane;
     }
 
+    /**
+     * Create abd return the basic conversion panel
+     * @return JPanel
+     */
     private JPanel getConversionPanel() {
         JPanel pane;
 
-        lblUseCustomRate = new JLabel("Use Custom Rate");
+        JLabel lblUseCustomRate = new JLabel("Use Custom Rate");
         lblUseCustomRate.setFont(new Font("Aharoni", Font.BOLD | Font.ITALIC, 11));
 
         chkCustomRate = new JCheckBox();
@@ -162,7 +168,7 @@ public class CurrencyGui extends JFrame implements ICurrency {
             setTargetAmount(calculateTotal());
         });
 
-        lblConversionRate = new JLabel("Conversion Rate");
+        JLabel lblConversionRate = new JLabel("Conversion Rate");
         lblConversionRate.setFont(new Font("Aharoni", Font.BOLD | Font.ITALIC, 11));
 
         txtConversionRate = new JTextField();
@@ -180,10 +186,14 @@ public class CurrencyGui extends JFrame implements ICurrency {
         return pane;
     }
 
+    /**
+     * Create and return the basic bank panel
+     * @return JPanel
+     */
     private JPanel getBankPanel() {
         JPanel pane;
 
-        lblBank = new JLabel("Select Bank");
+        JLabel lblBank = new JLabel("Select Bank");
         lblBank.setFont(new Font("Aharoni", Font.BOLD | Font.ITALIC, 11));
 
         cboBank = new JComboBox<>();
@@ -195,7 +205,7 @@ public class CurrencyGui extends JFrame implements ICurrency {
             setTargetAmount(calculateTotal());
         });
 
-        lblCommissionRate = new JLabel("Commission");
+        JLabel lblCommissionRate = new JLabel("Commission");
         lblCommissionRate.setFont(new Font("Aharoni", Font.BOLD | Font.ITALIC, 11));
 
         txtCommissionRate = new JTextField();
@@ -213,6 +223,13 @@ public class CurrencyGui extends JFrame implements ICurrency {
         return pane;
     }
 
+    /**
+     * Take two components and add them to a Jpanel with a space between them and return the JPanel
+     * @param a Component
+     * @param b Component
+     * @param margin int spacing integer
+     * @return JPanel
+     */
     private JPanel getDoublePanel(Component a, Component b, int margin) {
         JPanel pane = new JPanel();
 
@@ -237,12 +254,16 @@ public class CurrencyGui extends JFrame implements ICurrency {
         return pane;
     }
 
+    /**
+     * Create and return basic output panel
+     * @return JPanel
+     */
     private JPanel getOutputPanel() {
         JPanel pane = new JPanel();
         pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
         pane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        lblBaseAmount = new JLabel("Set Base Amount");
+        JLabel lblBaseAmount = new JLabel("Set Base Amount");
         lblBaseAmount.setFont(new Font("Aharoni", Font.BOLD | Font.ITALIC, 11));
 
         txtBaseAmount = new JTextField();
@@ -254,7 +275,7 @@ public class CurrencyGui extends JFrame implements ICurrency {
         txtTargetAmount.setColumns(10);
         txtTargetAmount.setEditable(false);
 
-        lblTargetAmount = new JLabel("Conversion");
+        JLabel lblTargetAmount = new JLabel("Conversion");
         lblTargetAmount.setFont(new Font("Aharoni", Font.BOLD | Font.ITALIC, 11));
 
         pane.add(lblBaseAmount);
@@ -268,12 +289,16 @@ public class CurrencyGui extends JFrame implements ICurrency {
         return pane;
     }
 
+    /**
+     * Creare and return the basic button panel
+     * @return JPanek
+     */
     private JPanel getButtonPanel() {
         JPanel pane = new JPanel();
         pane.setLayout(new BoxLayout(pane, BoxLayout.LINE_AXIS));
         pane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        btnConvert = new JButton("Convert");
+        JButton btnConvert = new JButton("Convert");
         btnConvert.addActionListener(e -> setTargetAmount(calculateTotal()));
 
         btnReset = new JButton("Reset");
@@ -293,27 +318,30 @@ public class CurrencyGui extends JFrame implements ICurrency {
         return pane;
     }
 
+    /**
+     * Add a titled border to a JPanel
+     * @param pane JPanel to add border to
+     * @param title String title of border
+     */
     private void addTitledBorder(JPanel pane, String title) {
         TitledBorder titledBorder = BorderFactory.createTitledBorder(title);
         pane.setBorder(titledBorder);
     }
 
+    /**
+     * Create a spacing component
+     * @param width int width of spacing
+     * @param height int height of spacing
+     * @return JPanel
+     */
     private Component createSpacing(int width, int height) {
         return Box.createRigidArea(new Dimension(width, height));
     }
 
-    //A convenience method for creating a MaskFormatter.
-    private MaskFormatter createFormatter(String s) {
-        MaskFormatter formatter = null;
-        try {
-            formatter = new MaskFormatter(s);
-        } catch (java.text.ParseException exc) {
-            System.err.println("formatter is bad: " + exc.getMessage());
-            System.exit(-1);
-        }
-        return formatter;
-    }
-
+    /**
+     * Calculate the total converted rate
+     * @returnBig decimal converted rate
+     */
     private BigDecimal calculateTotal() {
         if (getBaseAmount() == BigDecimal.valueOf(0))
             return BigDecimal.valueOf(0);
@@ -323,9 +351,8 @@ public class CurrencyGui extends JFrame implements ICurrency {
         BigDecimal totalExcludingComission = input.multiply(
                 useCustomRate() ? getCustomRate() : getRate(getBaseCurrency(), getTargetCurrency()));
         BigDecimal commission = (b.getCommission().divide(BigDecimal.valueOf(100))).multiply(totalExcludingComission);
-        BigDecimal totalIncludingCommission = totalExcludingComission.subtract(commission);
 
-        return totalIncludingCommission;
+        return totalExcludingComission.subtract(commission);
     }
 
     @Override
@@ -366,14 +393,9 @@ public class CurrencyGui extends JFrame implements ICurrency {
 
     @Override
     public BigDecimal getBaseAmount() {
-//        if(!letterCheckPassed()) {
-//            JOptionPane.showMessageDialog(null, "Invalid input!");
-//            return BigDecimal.valueOf(0);
-//        } else {
         return txtBaseAmount.getText() == null || txtBaseAmount.getText().trim().equals("")
                 ? BigDecimal.valueOf(0)
                 : BigDecimal.valueOf((Double.parseDouble(txtBaseAmount.getText())));
-//        }
     }
 
     @Override
@@ -390,6 +412,9 @@ public class CurrencyGui extends JFrame implements ICurrency {
         txtTargetAmount.setText(outputString);
     }
 
+    /**
+     * Reset UI
+     */
     public void reset() {
         cboBaseCurrency.setSelectedItem(defaultCurrency);
         cboTargetCurrency.setSelectedItem(cboTargetCurrency.getItemAt(0));
@@ -403,35 +428,23 @@ public class CurrencyGui extends JFrame implements ICurrency {
         txtBaseAmount.setText("");
     }
 
-    public BigDecimal getRate(Currency baseRate, Currency targetRate) {
+    /**
+     * Get conversion rate based on a base rate and target rate
+     * @param baseRate base rate
+     * @param targetRate target rate
+     * @return BigDecimal Conversion rate
+     */
+    private BigDecimal getRate(Currency baseRate, Currency targetRate) {
         BigDecimal result = null;
-
-//        if(!letterCheckPassed()) {
-//            JOptionPane.showMessageDialog(null, "Invalid input!");
-//            return BigDecimal.valueOf(0);
-//        }
-//        else {
 
         if (baseRate == targetRate)
             result = BigDecimal.valueOf(1);
         else
-            for (int i = 0; i < rates.length; i++) {
-                if (rates[i].getBaseCurrency().equals(baseRate.getCurrencyCode()))
-                    result = rates[i].getRate(targetRate.getCurrencyCode());
+            for (ExchangeRates rate : rates) {
+                if (rate.getBaseCurrency().equals(baseRate.getCurrencyCode()))
+                    result = rate.getRate(targetRate.getCurrencyCode());
             }
-//        }
+
         return result;
-    }
-
-    private boolean letterCheckPassed() {
-        return isNum(txtConversionRate.getText()) && (txtBaseAmount != null && isNum(txtBaseAmount.getText()));
-    }
-
-    private boolean isNum(String name) {
-        return name != null || name.matches("[1-9]+");
-    }
-
-    public void windowClosed(WindowEvent e) {
-        System.exit(0);
     }
 }

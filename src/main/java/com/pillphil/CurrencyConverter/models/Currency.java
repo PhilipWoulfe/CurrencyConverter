@@ -1,6 +1,14 @@
 package com.pillphil.CurrencyConverter.models;
 
-import com.sun.javafx.binding.StringFormatter;
+/**
+ * <h1>Currency</h1>
+ * <p>/p>
+ *
+ * @author Philip Woulfe
+ * @version 1.0
+ * @since 2017-11-27
+ */
+
 import org.jsoup.helper.Validate;
 
 public class Currency implements Comparable {
@@ -9,6 +17,13 @@ public class Currency implements Comparable {
     private String currencySymbol;
     private boolean isPrepended;
 
+    /**
+     * Constructor for Currency
+     * @param currencyCode currency code
+     * @param currencyFullName currency name
+     * @param currencySymbol currency symbol
+     * @param isPrepended currency is added to start of currency string when displaying
+     */
     public Currency(String currencyCode, String currencyFullName, String currencySymbol, boolean isPrepended) {
         Validate.notNull(currencyCode, "Currency Code can't be null");
         Validate.notNull(currencyFullName, "Currency Full Name can't be null");
