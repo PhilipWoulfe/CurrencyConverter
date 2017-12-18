@@ -72,7 +72,7 @@ public class CurrencyGui extends JFrame implements ICurrency {
 
     /**
      * Create and return the basic main panel
-     * @return return JPanel
+     * @return return JPanel h
      */
     private JPanel getMainPanel() {
         JPanel pane = new JPanel();
